@@ -2,30 +2,22 @@
 " Configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-if !exists("g:slime_target")
-  let g:slime_target = "tmux"
-end
-
 " screen and tmux need a file, so set a default if not configured
 if !exists("g:slime_paste_file")
   let g:slime_paste_file = expand("$HOME/.slime_paste")
 end
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Tmux
+" Hardcoded Tmux
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function! s:TmuxCommand(config, args)
-  return system("tmux " . a:args)
-endfunction
-
-function! s:TmuxSend(config, text)
+function! s:TargetSend(config, text)
   call s:WritePasteFile(a:text)
-  call s:TmuxCommand(a:config, "load-buffer " . g:slime_paste_file)
-  call s:TmuxCommand(a:config, "paste-buffer -d -p -t " . shellescape(a:config["target_pane"]))
+  call system("tmux load-buffer " . g:slime_paste_file)
+  call system("tmux paste-buffer -d -p -t " . shellescape(a:config["target_pane"]))
 endfunction
 
-function! s:TmuxConfig() abort
+function! s:TargetConfig() abort
   if !exists("b:slime_config")
     let b:slime_config = {"socket_name": "default", "target_pane": "{last}"}
   end
@@ -57,7 +49,7 @@ function! s:SlimeGetConfig()
     return
   end
   " prompt user
-  call s:SlimeDispatch('Config')
+  call s:TargetConfig()
 endfunction
 
 function! slime#send_op(type, ...) abort
@@ -104,18 +96,12 @@ endfunction
 
 function! slime#send(text)
   call s:SlimeGetConfig()
-  call s:SlimeDispatch('Send', b:slime_config, a:text)
+  call s:TargetSend(b:slime_config, a:text)
 endfunction
 
 function! slime#config() abort
   call inputsave()
-  call s:SlimeDispatch('Config')
+  call s:TargetConfig()
   call inputrestore()
-endfunction
-
-" delegation
-function! s:SlimeDispatch(name, ...)
-  let target = substitute(tolower(g:slime_target), '\(.\)', '\u\1', '') " Capitalize
-  return call("s:" . target . a:name, a:000)
 endfunction
 
