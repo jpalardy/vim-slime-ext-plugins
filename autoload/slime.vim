@@ -40,14 +40,6 @@ function! s:SlimeGetConfig()
   if exists("b:slime_config")
     return
   end
-  " assume defaults, if they exist
-  if exists("g:slime_default_config")
-    let b:slime_config = g:slime_default_config
-  end
-  " skip confirmation, if configured
-  if exists("g:slime_dont_ask_default") && g:slime_dont_ask_default
-    return
-  end
   " prompt user
   call s:TargetConfig()
 endfunction
