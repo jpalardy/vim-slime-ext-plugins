@@ -3,17 +3,22 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! s:TargetSend(config, text)
-  call s:TargetConfig()
-  let output = system("send-to-tmux", a:text)
+  let output = system("CONFIG=" . shellescape(a:config) . " send-to-tmux", a:text)
   if v:shell_error
     echoerr output
   endif
 endfunction
 
 function! s:TargetConfig() abort
-  if !exists("b:slime_config")
-    let b:slime_config = {"socket_name": "default", "target_pane": "{last}"}
+  if exists("b:slime_config")
+    return b:slime_config
   end
+  let output = system("send-to-tmux --config")
+  if v:shell_error
+    echoerr output
+    return ""
+  endif
+  let b:slime_config = output
   return b:slime_config
 endfunction
 
@@ -62,8 +67,7 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! slime#send(text)
-  let l:slime_config = slime#config()
-  call s:TargetSend(l:slime_config, a:text)
+  call s:TargetSend(s:TargetConfig(), a:text)
 endfunction
 
 function! slime#config() abort
