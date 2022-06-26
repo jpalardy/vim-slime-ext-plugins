@@ -14,6 +14,7 @@ function! s:TargetConfig() abort
   if !exists("b:slime_config")
     let b:slime_config = {"socket_name": "default", "target_pane": "{last}"}
   end
+  return b:slime_config
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -61,7 +62,8 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! slime#send(text)
-  call s:TargetSend(b:slime_config, a:text)
+  let l:slime_config = slime#config()
+  call s:TargetSend(l:slime_config, a:text)
 endfunction
 
 function! slime#config() abort
