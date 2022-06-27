@@ -71,8 +71,9 @@ function! slime#send(text)
 endfunction
 
 function! slime#config() abort
-  call inputsave()
+  if exists("b:slime_config")
+    unlet b:slime_config
+  end
   call s:TargetConfig()
-  call inputrestore()
 endfunction
 
