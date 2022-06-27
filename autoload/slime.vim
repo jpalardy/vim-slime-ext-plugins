@@ -1,9 +1,9 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Hardcoded Tmux
+" Target Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! s:TargetSend(config, text)
-  let output = system("CONFIG=" . shellescape(a:config) . " send-to-tmux", a:text)
+  let output = system("CONFIG=" . shellescape(a:config) . " " . g:slime_target_send, a:text)
   if v:shell_error
     echoerr output
   endif
@@ -13,7 +13,7 @@ function! s:TargetConfig() abort
   if exists("b:slime_config")
     return b:slime_config
   end
-  let output = system("send-to-tmux --config")
+  let output = system(g:slime_target_config)
   if v:shell_error
     echoerr output
     return ""
