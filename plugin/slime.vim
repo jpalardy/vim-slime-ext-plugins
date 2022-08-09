@@ -8,6 +8,7 @@ let g:loaded_slime = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 command -bar -nargs=0 SlimeConfig call slime#config()
+command -range -bar -nargs=0 SlimeSend call slime#send_range(<line1>, <line2>)
 
 noremap <SID>Operator :<c-u>call slime#store_curpos()<cr>:set opfunc=slime#send_op<cr>g@
 

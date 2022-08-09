@@ -3,7 +3,8 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! s:TargetSend(config, text)
-  let output = system("CONFIG=" . shellescape(a:config) . " " . g:slime_target_send, a:text)
+  let TargetSend = function(g:slime_target . "#send")
+  let output = TargetSend(a:config, a:text)
   if v:shell_error
     echoerr output
   endif
@@ -13,12 +14,12 @@ function! s:TargetConfig() abort
   if exists("b:slime_config")
     return b:slime_config
   end
-  let output = system(g:slime_target_config)
+  let TargetFunction = function(g:slime_target . "#config")
+  let output = TargetFunction()
   if v:shell_error
     echoerr output
     return ""
   endif
-  let b:slime_config = output
   return b:slime_config
 endfunction
 
@@ -60,6 +61,16 @@ function! s:SlimeRestoreCurPos()
     call winrestview(s:cur)
     unlet s:cur
   endif
+endfunction
+
+function! slime#send_range(startline, endline) abort
+  call s:TargetConfig()
+
+  let rv = getreg('"')
+  let rt = getregtype('"')
+  silent exe a:startline . ',' . a:endline . 'yank'
+  call slime#send(@")
+  call setreg('"', rv, rt)
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
