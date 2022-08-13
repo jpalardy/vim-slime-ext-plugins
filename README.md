@@ -28,7 +28,7 @@ function! slime_echo#config()
   end
 endfunction
 
-function! slime_wezterm#send(config, text)
+function! slime_echo#send(config, text)
   echo a:text
 endfunction
 ```
