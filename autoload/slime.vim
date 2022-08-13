@@ -2,20 +2,50 @@
 " Target Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" TargetSend tries to send the text and its config to the right place, by
+" finding the first existing variable in this list and performing the
+" corresponding action.
+" 1. b:slime_target_send  -> Trying to execute a `system` call, passing the
+" configuration in a `CONFIG` environment variable,
+" 2. b:SlimeTargetSend    -> Calling the function with `config` and `text`,
+" 3. g:slime_target_send  ->  Trying to execute a `system` call, passing the
+" configuration in a `CONFIG` environment variable,
+" 4. g:SlimeTargetSend    -> Calling the function with `config` and `text`.
 function! s:TargetSend(config, text)
-  let TargetSend = function(g:slime_target . "#send")
-  let output = TargetSend(a:config, a:text)
+  if exists("b:slime_target_send")
+    let output = system("CONFIG=" . shellescape(a:config) . " " . b:slime_target_send, a:text)
+  elseif exists("*b:SlimeTargetSend")||exists("b:SlimeTargetSend") 
+    let output = b:SlimeTargetSend(a:config, a:text)
+  elseif exists("g:slime_target_send")
+    let output = system("CONFIG=" . shellescape(a:config) . " " . g:slime_target_send, a:text)
+  elseif exists("*g:SlimeTargetSend")||exists("g:SlimeTargetSend") 
+    let output = g:SlimeTargetSend(a:config, a:text)
+  else
+    echoerr "vim-slime could not determine a valid target !"
+  endif
   if v:shell_error
     echoerr output
   endif
 endfunction
 
+" TargetConfig tries to configure vim-slime. It looks for a function to
+" delegate to and calls the first defined function in this list :
+" 1. b:SlimeTargetConfig
+" 2. g:SlimeTargetConfig
+"
+" If nothing is found, it silently returns an empty string, allowing for
+" no-configuration plugins.
 function! s:TargetConfig() abort
   if exists("b:slime_config")
     return b:slime_config
   end
-  let TargetFunction = function(g:slime_target . "#config")
-  let output = TargetFunction()
+  if exists("*b:SlimeTargetConfig")||exists("b:SlimeTargetConfig") 
+    let output = b:SlimeTargetConfig()
+  elseif exists("*g:SlimeTargetConfig")||exists("g:SlimeTargetConfig")
+    let output = g:SlimeTargetConfig()
+  else
+    return ""
+  endif
   if v:shell_error
     echoerr output
     return ""
