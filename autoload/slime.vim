@@ -2,54 +2,69 @@
 " Target Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" TargetSend tries to send the text and its config to the right place, by
-" finding the first existing variable in this list and performing the
-" corresponding action.
-" 1. b:slime_target_send  -> Trying to execute a `system` call, passing the
-" configuration in a `CONFIG` environment variable,
-" 2. b:SlimeTargetSend    -> Calling the function with `config` and `text`,
-" 3. g:slime_target_send  ->  Trying to execute a `system` call, passing the
-" configuration in a `CONFIG` environment variable,
-" 4. g:SlimeTargetSend    -> Calling the function with `config` and `text`.
+" TargetSend tries to send the text and its config to the right place.
+" It tries to use b:slime_target_send and defaults to g:slime_target_send.
+" b:slime_target_send can be either a string, in this case vim-slime wraps it
+" into a list, or a list of strings and functions.
+"
+" When processing a list, vim-slime chains the output of each element of the
+" list. If an element is a string it executes a `system` call, if its a
+" function it executes the function.
 function! s:TargetSend(config, text)
-  if exists("b:slime_target_send")
-    let output = system("CONFIG=" . shellescape(a:config) . " " . b:slime_target_send, a:text)
-  elseif exists("*b:SlimeTargetSend")||exists("b:SlimeTargetSend") 
-    let output = b:SlimeTargetSend(a:config, a:text)
-  elseif exists("g:slime_target_send")
-    let output = system("CONFIG=" . shellescape(a:config) . " " . g:slime_target_send, a:text)
-  elseif exists("*g:SlimeTargetSend")||exists("g:SlimeTargetSend") 
-    let output = g:SlimeTargetSend(a:config, a:text)
-  else
-    echoerr "vim-slime could not determine a valid target !"
+  if exists("g:slime_target_send") && !exists("b:slime_target_send")
+    let b:slime_target_send = g:slime_target_send
   endif
-  if v:shell_error
-    echoerr output
+  if !exists("b:slime_target_send")
+    echoerr "vim-slime could not find slime_target_send."
+    return ""
   endif
+  let type_of_target = type(b:slime_target_send)
+  if type_of_target == v:t_string
+    let b:slime_target_send = [b:slime_target_send]
+  elseif type_of_target != v:t_list
+    echoerr "vim-slime got unsupported type for slime_target_send. Must be either List or String."
+  endif
+  let output_text = a:text
+  " We need to iterate over the indices because slime_target_send can store
+  " either functions or strings, and there are different variable naming rules
+  " for those two types in vimscript.
+  for i in range(len(b:slime_target_send))
+    let type_of_item = type(b:slime_target_send[i])
+    if type_of_item == v:t_string
+      let output_text = system("CONFIG=" . shellescape(json_encode(a:config)) . " " . b:slime_target_send[i], output_text)
+      if v:shell_error
+        echoerr output_text
+        break
+      endif
+    elseif type_of_item == v:t_func
+      let output_text = b:slime_target_send[i](a:config, output_text)
+    else
+      echoerr "Item " . i . " of slime_target_send is of invalid type. Only strings and functions are supported."
+      break
+    endif
+  endfor
 endfunction
 
-" TargetConfig tries to configure vim-slime. It looks for a function to
-" delegate to and calls the first defined function in this list :
-" 1. b:SlimeTargetConfig
-" 2. g:SlimeTargetConfig
+" TargetConfig tries to configure vim-slime. It looks for a functions to
+" delegate to in b:slime_target_config or in g:slime_target_config.
 "
 " If nothing is found, it silently returns an empty string, allowing for
 " no-configuration plugins.
 function! s:TargetConfig() abort
   if exists("b:slime_config")
     return b:slime_config
-  end
-  if exists("*b:SlimeTargetConfig")||exists("b:SlimeTargetConfig") 
-    let output = b:SlimeTargetConfig()
-  elseif exists("*g:SlimeTargetConfig")||exists("g:SlimeTargetConfig")
-    let output = g:SlimeTargetConfig()
-  else
+  endif
+  if exists("g:slime_target_config") && !exists("b:slime_target_config")
+    let b:slime_target_config = g:slime_target_config
+  endif
+  " Silently exit if no configuration functions list exists.
+  if !exists("b:slime_target_config")
     return ""
   endif
-  if v:shell_error
-    echoerr output
-    return ""
-  endif
+  let b:slime_config = {}
+  for ConfigurationFunction in b:slime_target_config
+    call ConfigurationFunction()
+  endfor
   return b:slime_config
 endfunction
 
@@ -114,7 +129,7 @@ endfunction
 function! slime#config() abort
   if exists("b:slime_config")
     unlet b:slime_config
-  end
-  call s:TargetConfig()
-endfunction
+    end
+    call s:TargetConfig()
+  endfunction
 

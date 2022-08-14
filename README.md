@@ -29,22 +29,28 @@ need to do that using a vim function. In you configuration file, you can add the
 following :
 
 ```vimscript
-function! SlimeTargetConfig()
-  if !exists("b:slime_config")
-    let b:slime_config = ""
-  endif
-  let b:slime_config = input("Target file name :", b:slime_config) 
+function! SlimeSnitchConfig()
+  if !exists("b:slime_config['slime_snitch']")
+    let b:slime_config["slime_snitch"] = "snitch.txt"
+  end
+  let b:slime_config["slime_snitch"] = input("Snitch filename : ", b:slime_config["slime_snitch"])
 endfunction
 ```
 
-and replace the target command with :
-
+then replace the target command with (the extra `bash -c` statement is needed to allow access to the $CONFIG
+environment variable set by vim-slime. See
+[here](https://unix.stackexchange.com/questions/126938/why-is-setting-a-variable-before-a-command-legal-in-bash))
+:
 ```vimscript
-slime_target_send="bash -c 'cat >> $CONFIG'"
+let slime_target_send = "bash -c 'tee $(echo $CONFIG | jq -r .slime_snitch)'"
 ```
 
-(the extra `bash -c` statement is needed to allow access to the $CONFIG
-environment variable set by vim-slime. See [here](https://unix.stackexchange.com/questions/126938/why-is-setting-a-variable-before-a-command-legal-in-bash))
+and register your configuration function (note that this is a list with one
+element):
+```vimscript
+let slime_target_config = [function("SlimeSnitchConfig")]
+```
+
 
 ### Example of a tiny bit more evolved plugin, using vim functions.
 ```
@@ -68,12 +74,27 @@ endfunction
 
 function! slime_echo#send(config, text)
   echo a:text
+  return a:text
 endfunction
 ```
 
 Then in your configuration file :
 
 ```vimscript
-let SlimeTargetConfig=function("slime_wezterm#config")
-let SlimeTargetSend=function("slime_wezterm#send")
+let slime_target_config=[function("slime_echo#config")]
+let slime_target_send=[function("slime_echo#send")]
+```
+
+### Example of chaining plugins.
+
+vim-slime is capable of chaining plugins. This is done by providing multiple functions
+and/or strings in the `slime_target_send` list. The output of each function or
+shell command is fed to the next. This allows plugins to edit the text that is
+being sent by vim-slime, or to send the same text at different locations. For
+example, one could chain the two previous plugins by simply using the following
+configuration :
+
+```vimscript
+let slime_target_config=[function("SlimeSnitchConfig"), function("slime_wezterm#config")]
+let slime_target_send=["bash -c 'tee $(echo $CONFIG | jq -r .slime_snitch)'", function("slime_wezterm#send")]
 ```
