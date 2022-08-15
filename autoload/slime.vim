@@ -2,70 +2,31 @@
 " Target Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" TargetSend tries to send the text and its config to the right place.
-" It tries to use b:slime_target_send and defaults to g:slime_target_send.
-" b:slime_target_send can be either a string, in this case vim-slime wraps it
-" into a list, or a list of strings and functions.
-"
-" When processing a list, vim-slime chains the output of each element of the
-" list. If an element is a string it executes a `system` call, if its a
-" function it executes the function.
-function! s:TargetSend(config, text)
-  if exists("g:slime_target_send") && !exists("b:slime_target_send")
-    let b:slime_target_send = g:slime_target_send
-  endif
-  if !exists("b:slime_target_send")
-    echoerr "vim-slime could not find slime_target_send."
-    return ""
-  endif
-  let type_of_target = type(b:slime_target_send)
-  if type_of_target == v:t_string
-    let b:slime_target_send = [b:slime_target_send]
-  elseif type_of_target != v:t_list
-    echoerr "vim-slime got unsupported type for slime_target_send. Must be either List or String."
-  endif
-  let output_text = a:text
-  " We need to iterate over the indices because slime_target_send can store
-  " either functions or strings, and there are different variable naming rules
-  " for those two types in vimscript.
-  for i in range(len(b:slime_target_send))
-    let type_of_item = type(b:slime_target_send[i])
-    if type_of_item == v:t_string
-      let output_text = system("CONFIG=" . shellescape(json_encode(a:config)) . " " . b:slime_target_send[i], output_text)
-      if v:shell_error
-        echoerr output_text
-        break
-      endif
-    elseif type_of_item == v:t_func
-      let output_text = b:slime_target_send[i](a:config, output_text)
-    else
-      echoerr "Item " . i . " of slime_target_send is of invalid type. Only strings and functions are supported."
-      break
+" this would go in a `util` module...
+function! s:resolve(...)
+  for name in a:000
+    if exists(name)
+      return eval(name)
     endif
   endfor
+  return v:null
 endfunction
 
-" TargetConfig tries to configure vim-slime. It looks for a functions to
-" delegate to in b:slime_target_config or in g:slime_target_config.
-"
-" If nothing is found, it silently returns an empty string, allowing for
-" no-configuration plugins.
-function! s:TargetConfig() abort
-  if exists("b:slime_config")
-    return b:slime_config
+function! s:TargetSend(config, text)
+  let b:slime_target_send = s:resolve("b:slime_target_send", "g:slime_target_send")
+  if b:slime_target_send is v:null
+    echoerr "slime_target_send is not defined"
+    return
   endif
-  if exists("g:slime_target_config") && !exists("b:slime_target_config")
-    let b:slime_target_config = g:slime_target_config
+  call function(b:slime_target_send)(a:config, a:text)
+endfunction
+
+function! s:TargetConfig(config) abort
+  let b:slime_target_config = s:resolve("b:slime_target_config", "g:slime_target_config")
+  if b:slime_target_config is v:null
+    return v:null
   endif
-  " Silently exit if no configuration functions list exists.
-  if !exists("b:slime_target_config")
-    return ""
-  endif
-  let b:slime_config = {}
-  for ConfigurationFunction in b:slime_target_config
-    call ConfigurationFunction()
-  endfor
-  return b:slime_config
+  return function(b:slime_target_config)(a:config)
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -123,13 +84,26 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! slime#send(text)
-  call s:TargetSend(s:TargetConfig(), a:text)
+  call s:TargetSend(slime#config(), a:text)
 endfunction
 
 function! slime#config() abort
   if exists("b:slime_config")
+    return b:slime_config
+  endif
+  let b:slime_config = s:resolve("g:slime_config")
+  if b:slime_config is v:null
+    let b:slime_config = {}
+  endif
+  let b:slime_config = s:TargetConfig(b:slime_config)
+  return b:slime_config
+endfunction
+
+" force re-config
+function! slime#reconfig() abort
+  if exists("b:slime_config")
     unlet b:slime_config
-    end
-    call s:TargetConfig()
-  endfunction
+  endif
+  return slime#config()
+endfunction
 
