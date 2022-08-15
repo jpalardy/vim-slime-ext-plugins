@@ -15,8 +15,7 @@ endfunction
 function! s:TargetSend(config, text)
   let b:slime_target_send = s:resolve("b:slime_target_send", "g:slime_target_send")
   if b:slime_target_send is v:null
-    echoerr "slime_target_send is not defined"
-    return
+    throw "slime_target_send is not defined"
   endif
   call function(b:slime_target_send)(a:config, a:text)
 endfunction
@@ -24,7 +23,7 @@ endfunction
 function! s:TargetConfig(config) abort
   let b:slime_target_config = s:resolve("b:slime_target_config", "g:slime_target_config")
   if b:slime_target_config is v:null
-    return v:null
+    throw "slime_target_config is not defined"
   endif
   return function(b:slime_target_config)(a:config)
 endfunction
@@ -107,3 +106,7 @@ function! slime#reconfig() abort
   return slime#config()
 endfunction
 
+" helper function for empty configs
+function! slime#noop(...)
+  return {}
+endfunction
