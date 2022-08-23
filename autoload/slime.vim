@@ -69,8 +69,6 @@ function! s:SlimeRestoreCurPos()
 endfunction
 
 function! slime#send_range(startline, endline) abort
-  call s:TargetConfig()
-
   let rv = getreg('"')
   let rt = getregtype('"')
   silent exe a:startline . ',' . a:endline . 'yank'
