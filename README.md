@@ -29,7 +29,7 @@ function! SlimeFooPluginConfig(config)
 endfunction
 ```
 
-In case your plugin does not need configuration, you can use the `slime#noop` convenience at the registration step.
+In case your plugin does not need configuration, you can use the `slime#noop` convenience function at the registration step.
 
 ### Sending the data
 
