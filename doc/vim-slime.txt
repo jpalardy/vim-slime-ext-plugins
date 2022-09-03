@@ -102,22 +102,22 @@ Note: The default mappings can be disabled using |g:slime_no_mappings|.
 *<Plug>SlimeRegionSend*       Send text in visual or select mode.
 *<Plug>SlimeParagraphSend*    Send the current paragraph.
 *<Plug>SlimeConfig*           Trigger plugin configuration.
-*<Plug>SlimeOperator*           The slime operator allows user to send the
+*<Plug>SlimeMotionSend*           The slime operator allows user to send the
                             current selection. Seel |slime-operator-example|.
 
                                                       *slime-operator-example*
-SlimeOperator example~
+SlimeMotionSend example~
 
 Vim-slime defines its own |operator| that allows you to use all kind of
 motions (see |motion.txt|) to send your data.
 
-For example |<Plug>SlimeParagraphSend| is defined as |<Plug>SlimeOperatorip|,
-which calls |<Plug>SlimeOperator| on the current "inner paragraph" (see |ip|).
+For example |<Plug>SlimeParagraphSend| is defined as |<Plug>SlimeMotionSendip|,
+which calls |<Plug>SlimeMotionSend| on the current "inner paragraph" (see |ip|).
 
-By default |<Plug>SlimeOperator| is not mapped. Users can create their own
+By default |<Plug>SlimeMotionSend| is not mapped. Users can create their own
 mapping in their configuration file, e.g. :
 
-`noremap cs <Plug>SlimeOperator`
+`noremap cs <Plug>SlimeMotionSend`
 
 With the above mapping it becomes possible for users to finely tune what they
 send. Thus, in the following configuration >
@@ -149,7 +149,7 @@ slime#noop(...)                                                 *slime#noop()*
           does not need any configuration.
 
 slime#send_op({type}, ...)                                   *slime#send_op()*
-          The operator function used by |<Plug>SlimeOperator|. It is intended
+          The operator function used by |<Plug>SlimeMotionSend|. It is intended
           to be used either manually or through |g@|. To use it manually, you
           should set |a:0| to something (the actual value does not matter).
           When used manually, |slime#send_op()| selects what is between the 
