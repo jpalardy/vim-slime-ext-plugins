@@ -1,0 +1,127 @@
+*slime.txt*   Grab some text and "send" it to a REPL session.
+
+Author:  Jonathan Palardy                                       *slime-author*
+License: Same terms as Vim itself (see |license|)
+
+This plugin is only available if 'compatible' is not set.
+
+==============================================================================
+                                                                       *slime*
+Grab some text and "send" it to a REPL session.
+
+	VIM --> vim-slime --> REPL~
+
+Presumably, your session contains a REPL, maybe Clojure, R or python. If you
+can type text into it, vim-slime can send text to it.
+
+The reason you're doing this? Because you want the benefits of a REPL and the
+benefits of using Vim (familiar environment, syntax highlighting, persistence
+...).
+
+1. Slime Usage...................................................|slime-usage|
+2. Plugin Configuration...........................|slime-plugin-configuration|
+3. Available Plugins...........................................|slime-plugins|
+4. Slime Configuration...................................|slime-configuration|
+5. Slime functions...........................................|slime-functions|
+
+==============================================================================
+1. Slime Usage                                                   *slime-usage*
+
+                                                  *CTRL-C_CTRL-C* *<c-c><c-c>*
+<c-c><c-c>		      Send the current paragraph text to REPL. Slime will prompt
+                    for configuration if slime is not configured for the
+                    current buffer.
+
+                                              *v_CTRL-C_CTRL-C* *v_<c-c><c-c>*
+{Visual}<c-c><c-c>	Send highlighted text to REPL.
+
+                                                           *CTRL-C_v* *<c-c>v*
+                                                                *:SlimeConfig*
+<c-c>v			        Setup slime. You will be prompted for information
+:SlimeConfig        regarding plugin configuration if needed.
+
+                                                                  *:SlimeSend*
+:<range>SlimeSend	  Send a [range] of lines to REPL. If no range is provided
+                    the current line is sent.
+
+==============================================================================
+2. Plugin Configuration                           *slime-plugin-configuration*
+
+Vim-slime needs a plugin to actually send your code to the REPL. Several
+plugins are available, see |slime-plugins|. 
+
+A plugin should expose at least one target function that will be used by
+vim-slime to send data to the REPL. The signature must be :
+
+`MyTargetFunction(config, text)`
+
+With `config` being the configuration variable and `text` the text which is to
+be sent. It is a good practice that `config` is a dictionary, and that a
+plugins register their configuration in `config["myplugin"]`. Vim-slime takes
+care to initialize the configuration by calling the defined configuration
+function. Such a function must have the following signature :
+
+`MyConfigFunction(config)`
+
+And return the modified configuration.
+
+Both target and configuration functions must be declared to vim-slime using
+|b:slime_target_send| or |g:slime_target_send| and |b:slime_target_config| and
+|g:slime_target_config| respectively. The buffer variable takes precedence
+over the global variable, so you can use different plugins for different
+buffers. 
+
+Note: If your plugin does not need any configuration, you can register
+`slime#noop` instead of your configuration function.
+
+
+==============================================================================
+3. Available Plugins                                           *slime-plugins*
+
+	*Todo	list known plugins here an links to their repositories.
+
+==============================================================================
+4. Slime Configuration                                   *slime-configuration*
+
+Global Variables~
+*g:slime_target_send*       |string| used to register the plugin's target 
+                          function
+*g:slime_target_config*     |string| used to register the plugin's configuration
+                          function
+*g:slime_no_mappings*     If set, disable the default mappings.
+
+Buffer Variables~
+*b:slime_target_send*       Same as |g:slime_target_send|, but takes precedence
+                          over it.
+*b:slime_target_config*     Same as |g:slime_target_config| but takes
+                          precedence over it.
+Mappings~
+
+Note: The default mappings can be disabled using |g:slime_no_mappings|.
+
+*<Plug>SlimeRegionSend*       Send text in visual or select mode.
+*<Plug>SlimeParagraphSend*    Send the current paragraph.
+*<Plug>SlimeConfig*           Trigger plugin configuration.
+
+==============================================================================
+5. Slime functions                                           *slime-functions*
+
+Vim-slime defines a public interface that you can use.
+
+slime#send({text})                                              *slime#send()*
+          Send the given {text} to the target.
+
+slime#config()                                                *slime#config()*
+          Trigger vim-slime configuration and return the configuration. If 
+          vim-slime is already configured for the current buffer, return the
+          current configuration.
+
+slime#reconfig()                                            *slime#reconfig()*
+          Force vim-slime reconfiguration. Erase current buffer configuration
+          and call |slime#config()|.
+
+slime#noop(...)                                                 *slime#noop()*
+          Do nothing. Useful to feed to |g:slime_target_config| when a plugin
+          does not need any configuration.
+
+vim:tw=78:ts=8:ft=help:norl:
