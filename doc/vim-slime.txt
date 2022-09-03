@@ -56,7 +56,7 @@ vim-slime to send data to the REPL. The signature must be :
 `MyTargetFunction(config, text)`
 
 With `config` being the configuration variable and `text` the text which is to
-be sent. Vim-slime takescare to initialize the configuration by calling the
+be sent. Vim-slime takes care to initialize the configuration by calling the
 defined configuration function. Such a function must have the following
 signature :
 
