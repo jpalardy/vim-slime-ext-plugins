@@ -6,6 +6,10 @@ easy/hard it would be to keep target/language plugins outside of this codebase.
 
 This fork uses plugins to send data to its targets.
 
+## Vim-slime documentation and usage
+
+The complete [documentation](doc/vim-slime.txt) is available with `:help vim-slime`.
+
 ## Plugin structure
 
 Vim-slime needs a way to configure, and a way to send text. This is
@@ -53,6 +57,3 @@ let g:slime_target_config="SlimeFooPluginConfig"
 
 Remember that you can use `slime#noop` here if your plugin does not need any configuration.
 
-## Vim-slime documentation
-
-The complete documentation is available with `:help vim-slime`.
