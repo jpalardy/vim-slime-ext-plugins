@@ -77,7 +77,8 @@ Note: If your plugin does not need any configuration, you can register
 ==============================================================================
 3. Available Plugins                                           *slime-plugins*
 
-	*Todo	list known plugins here an links to their repositories.
+You can find a list of available target plugins at
+https://github.com/jpalardy/vim-slime-ext-plugins 
 
 ==============================================================================
 4. Slime Configuration                                   *slime-configuration*
