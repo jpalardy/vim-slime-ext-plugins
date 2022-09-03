@@ -56,10 +56,9 @@ vim-slime to send data to the REPL. The signature must be :
 `MyTargetFunction(config, text)`
 
 With `config` being the configuration variable and `text` the text which is to
-be sent. It is a good practice that `config` is a dictionary, and that a
-plugins register their configuration in `config["myplugin"]`. Vim-slime takes
-care to initialize the configuration by calling the defined configuration
-function. Such a function must have the following signature :
+be sent. Vim-slime takescare to initialize the configuration by calling the
+defined configuration function. Such a function must have the following
+signature :
 
 `MyConfigFunction(config)`
 
@@ -84,6 +83,7 @@ Note: If your plugin does not need any configuration, you can register
 4. Slime Configuration                                   *slime-configuration*
 
 Global Variables~
+
 *g:slime_target_send*       |string| used to register the plugin's target 
                           function
 *g:slime_target_config*     |string| used to register the plugin's configuration
@@ -91,19 +91,38 @@ Global Variables~
 *g:slime_no_mappings*     If set, disable the default mappings.
 
 Buffer Variables~
+
 *b:slime_target_send*       Same as |g:slime_target_send|, but takes precedence
                           over it.
 *b:slime_target_config*     Same as |g:slime_target_config| but takes
                           precedence over it.
+
 Mappings~
 
 Note: The default mappings can be disabled using |g:slime_no_mappings|.
 
-*<Plug>SlimeRegionSend*       Send text in visual or select mode.
-*<Plug>SlimeParagraphSend*    Send the current paragraph.
-*<Plug>SlimeConfig*           Trigger plugin configuration.
-*<Plug>SlimeMotionSend*           The slime operator allows user to send the
+*<Plug>SlimeRegionSend*       Send text in visual or select mode. Default
+                            mapping is <c-c><c-c> in normal and select mode.
+*<Plug>SlimeParagraphSend*    Send the current paragraph. Default mapping is
+                            <c-c><c-c> in normal mode.
+*<Plug>SlimeConfig*           Trigger plugin configuration. Default mapping is
+                            <c-c>v in normal mode.
+*<Plug>SlimeMotionSend*       The slime operator allows user to send the
                             current selection. Seel |slime-operator-example|.
+*<Plug>SlimeLineSend*         Send the current line to REPL.
+
+Commands~
+
+*:SlimeConfig*                Trigger plugin configuration.
+*:SlimeSend*                  Send the lines given in parameters.
+                            `:3,7SlimeSend` will send lines 3 to 7 to REPL.
+                            You can also use |marks|.
+*:SlimeSend1*                 Send the given parameter string to REPL.
+                            `:SlimeSend1 print("Hello World")` will send 
+                            `print("Hello World")` followed by a newline
+                            character ("\r") to REPL.
+*:SlimeSend0*                 Same as |:SlimeSend1|, without newline character.
+*:SlimeSendCurrentLine*       Send current line to REPL.
 
                                                       *slime-operator-example*
 SlimeMotionSend example~
@@ -156,5 +175,8 @@ slime#send_op({type}, ...)                                   *slime#send_op()*
           |`<| and |`>| tags (last selected Visual area in current buffer)
           with the given {type} mode. You could for example use the last
           visual mode, given by |visualmode()|.
+
+slime#send_range({startline}, {endline})                  *slime#send_range()*
+          Send the lines from {startline} to {endline}.
 
 vim:tw=78:ts=8:ft=help:norl:

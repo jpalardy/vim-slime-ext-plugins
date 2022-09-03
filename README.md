@@ -10,6 +10,24 @@ This fork uses plugins to send data to its targets.
 
 The complete [documentation](doc/vim-slime.txt) is available with `:help vim-slime`.
 
+## Upgrading from vim-slime
+
+The new vim-slime defines most of the command and mappings that legacy
+vim-slime defines, except for `<Plug>SlimeSendCell`, so your current mappings
+and configuration should still work. For cells feature, please see
+[vim-slime-cells](https://github.com/Klafyvel/vim-slime-cells/).
+
+You will need a plugin for your specific target. Please see [available target plugins](#available-plugins). 
+Please refer to the target plugin documentation and [Registering the plugin](#registering-the-plugin) 
+below for configuration.
+
+## Available plugins
+
+Here are the available target plugins. If you write a new plugin for your
+favourite target, please open a [pull request](https://github.com/jpalardy/vim-slime-ext-plugins/compare).
+
+* Wezterm : [Klafyvel/vim-slime-ext-wezterm](https://github.com/Klafyvel/vim-slime-ext-wezterm)
+
 ## Plugin structure
 
 Vim-slime needs a way to configure, and a way to send text. This is

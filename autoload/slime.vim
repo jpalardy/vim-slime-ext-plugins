@@ -43,14 +43,6 @@ function! s:SlimeRestoreCurPos()
   endif
 endfunction
 
-function! slime#send_range(startline, endline) abort
-  let rv = getreg('"')
-  let rt = getregtype('"')
-  silent exe a:startline . ',' . a:endline . 'yank'
-  call slime#send(@")
-  call setreg('"', rv, rt)
-endfunction
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Public interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -107,6 +99,14 @@ function! slime#send_op(type, ...) abort
   call setreg('"', rv, rt)
 
   call s:SlimeRestoreCurPos()
+endfunction
+
+function! slime#send_range(startline, endline) abort
+  let rv = getreg('"')
+  let rt = getregtype('"')
+  silent exe a:startline . ',' . a:endline . 'yank'
+  call slime#send(@")
+  call setreg('"', rv, rt)
 endfunction
 
 
