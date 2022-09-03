@@ -32,31 +32,6 @@ endfunction
 " Helpers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function! slime#send_op(type, ...) abort
-  let sel_save = &selection
-  let &selection = "inclusive"
-  let rv = getreg('"')
-  let rt = getregtype('"')
-
-  if a:0  " Invoked from Visual mode, use '< and '> marks.
-    silent exe "normal! `<" . a:type . '`>y'
-  elseif a:type == 'line'
-    silent exe "normal! '[V']y"
-  elseif a:type == 'block'
-    silent exe "normal! `[\<C-V>`]\y"
-  else
-    silent exe "normal! `[v`]y"
-  endif
-
-  call setreg('"', @", 'V')
-  call slime#send(@")
-
-  let &selection = sel_save
-  call setreg('"', rv, rt)
-
-  call s:SlimeRestoreCurPos()
-endfunction
-
 function! slime#store_curpos()
   let s:cur = winsaveview()
 endfunction
@@ -108,3 +83,30 @@ endfunction
 function! slime#noop(...)
   return {}
 endfunction
+
+function! slime#send_op(type, ...) abort
+  let sel_save = &selection
+  let &selection = "inclusive"
+  let rv = getreg('"')
+  let rt = getregtype('"')
+
+  if a:0  " Invoked from Visual mode, use '< and '> marks.
+    silent exe "normal! `<" . a:type . '`>y'
+  elseif a:type == 'line'
+    silent exe "normal! '[V']y"
+  elseif a:type == 'block'
+    silent exe "normal! `[\<C-V>`]\y"
+  else
+    silent exe "normal! `[v`]y"
+  endif
+
+  call setreg('"', @", 'V')
+  call slime#send(@")
+
+  let &selection = sel_save
+  call setreg('"', rv, rt)
+
+  call s:SlimeRestoreCurPos()
+endfunction
+
+

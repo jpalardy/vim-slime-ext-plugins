@@ -102,6 +102,30 @@ Note: The default mappings can be disabled using |g:slime_no_mappings|.
 *<Plug>SlimeRegionSend*       Send text in visual or select mode.
 *<Plug>SlimeParagraphSend*    Send the current paragraph.
 *<Plug>SlimeConfig*           Trigger plugin configuration.
+*<Plug>SlimeOperator*           The slime operator allows user to send the
+                            current selection. Seel |slime-operator-example|.
+
+                                                      *slime-operator-example*
+SlimeOperator example~
+
+Vim-slime defines its own |operator| that allows you to use all kind of
+motions (see |motion.txt|) to send your data.
+
+For example |<Plug>SlimeParagraphSend| is defined as |<Plug>SlimeOperatorip|,
+which calls |<Plug>SlimeOperator| on the current "inner paragraph" (see |ip|).
+
+By default |<Plug>SlimeOperator| is not mapped. Users can create their own
+mapping in their configuration file, e.g. :
+
+`noremap cs <Plug>SlimeOperator`
+
+With the above mapping it becomes possible for users to finely tune what they
+send. Thus, in the following configuration >
+
+  This is "some fairly nice" text
+                ⮤ Cursor is here
+>
+Pressing `csi"` will send `some fairly nice` to the REPL.
 
 ==============================================================================
 5. Slime functions                                           *slime-functions*
@@ -123,5 +147,14 @@ slime#reconfig()                                            *slime#reconfig()*
 slime#noop(...)                                                 *slime#noop()*
           Do nothing. Useful to feed to |g:slime_target_config| when a plugin
           does not need any configuration.
+
+slime#send_op({type}, ...)                                   *slime#send_op()*
+          The operator function used by |<Plug>SlimeOperator|. It is intended
+          to be used either manually or through |g@|. To use it manually, you
+          should set |a:0| to something (the actual value does not matter).
+          When used manually, |slime#send_op()| selects what is between the 
+          |`<| and |`>| tags (last selected Visual area in current buffer)
+          with the given {type} mode. You could for example use the last
+          visual mode, given by |visualmode()|.
 
 vim:tw=78:ts=8:ft=help:norl:
