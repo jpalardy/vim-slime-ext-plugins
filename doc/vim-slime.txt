@@ -9,7 +9,7 @@ This plugin is only available if 'compatible' is not set.
                                                                        *slime*
 Grab some text and "send" it to a REPL session.
 
-	VIM --> vim-slime --> REPL~
+                         VIM --> vim-slime --> REPL~
 
 Presumably, your session contains a REPL, maybe Clojure, R or python. If you
 can type text into it, vim-slime can send text to it.
@@ -28,21 +28,23 @@ benefits of using Vim (familiar environment, syntax highlighting, persistence
 1. Slime Usage                                                   *slime-usage*
 
                                                   *CTRL-C_CTRL-C* *<c-c><c-c>*
-<c-c><c-c>		      Send the current paragraph text to REPL. Slime will prompt
+<c-c><c-c>          Send the current paragraph text to REPL. Slime will prompt
                     for configuration if slime is not configured for the
                     current buffer.
 
                                               *v_CTRL-C_CTRL-C* *v_<c-c><c-c>*
-{Visual}<c-c><c-c>	Send highlighted text to REPL.
+{Visual}<c-c><c-c>  Send highlighted text to REPL.
 
                                                            *CTRL-C_v* *<c-c>v*
                                                                 *:SlimeConfig*
-<c-c>v			        Setup slime. You will be prompted for information
+<c-c>v              Setup slime. You will be prompted for information
 :SlimeConfig        regarding plugin configuration if needed.
 
                                                                   *:SlimeSend*
-:<range>SlimeSend	  Send a [range] of lines to REPL. If no range is provided
+:<range>SlimeSend   Send a [range] of lines to REPL. If no range is provided
                     the current line is sent.
+
+See |slime-configuration| for advanced commands and mappings.
 
 ==============================================================================
 2. Plugin Configuration                           *slime-plugin-configuration*
