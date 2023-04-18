@@ -27,6 +27,7 @@ Here are the available target plugins. If you write a new plugin for your
 favourite target, please open a [pull request](https://github.com/jpalardy/vim-slime-ext-plugins/edit/main/README.md).
 
 * Wezterm : [Klafyvel/vim-slime-ext-wezterm](https://github.com/Klafyvel/vim-slime-ext-wezterm)
+* NeoVim terminal: [Klafyvel/Klafyvel/vim-slime-ext-neovim](https://github.com/Klafyvel/vim-slime-ext-neovim)
 
 ## Plugin structure
 
