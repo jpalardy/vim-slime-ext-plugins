@@ -72,7 +72,7 @@ function! slime#config() abort
     let b:slime_config = {}
   endif
   let config = s:TargetConfig(b:slime_config)
-  if exists("b:slime_validate_config")
+  if exists("g:slime_validate_config")
     let valid = g:slime_validate_config(config)
   endif
   if valid
