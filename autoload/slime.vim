@@ -68,9 +68,15 @@ function! slime#config() abort
   endif
 
   let b:slime_config = s:resolve("g:slime_config")
-  if b:slime_config is v:null
+
+  if b:slime_config is v:null "implies that g:slime_config doesn't exist
     let b:slime_config = {}
+  elseif exists("g:slime_validate_config") && !g:slime_validate_config("g:slime_config")
+	let b:slime_config = {}
+	unlet("g:slime_config")
   endif
+  " at the end of the preceding try block, b:slime_config is either {} or a valid config
+
   let config = s:TargetConfig(b:slime_config)
   if exists("g:slime_validate_config")
     let valid = g:slime_validate_config(config)
