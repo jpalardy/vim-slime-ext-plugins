@@ -67,7 +67,7 @@ endfunction
 
 ### Registering the plugin
 
-Vim-slime looks for the configuration function and the target function in two variables : `slime_target_send` and `slime_target_config`. Note that these variables can be defined globally or on a per-buffer lever. The variable at buffer level takes precedence. In your configuration file, you can simply add :
+Vim-slime looks for the configuration function and the target function in two variables : `slime_target_send` and `slime_target_config`. Note that these variables can be defined globally or on a per-buffer level. The variable at buffer level takes precedence. In your configuration file, you can simply add :
 
 ```vimscript
 let g:slime_target_send="SlimeFooPluginSend"
