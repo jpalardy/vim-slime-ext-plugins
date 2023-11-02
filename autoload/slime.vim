@@ -48,19 +48,39 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! slime#send(text)
-  call s:TargetSend(slime#config(), a:text)
+  let config = slime#config()
+  if config !=# "invalid"
+    call s:TargetSend(config, a:text)
+  endif
 endfunction
 
 function! slime#config() abort
+  let valid = 1
   if exists("b:slime_config")
-    return b:slime_config
+    if exists("g:slime_validate_config")
+      let valid =  g:slime_validate_config(b:slime_config)
+    endif
+
+    if valid
+      return b:slime_config
+    endif
+
+    return "invalid"
   endif
   let b:slime_config = s:resolve("g:slime_config")
   if b:slime_config is v:null
     let b:slime_config = {}
   endif
-  let b:slime_config = s:TargetConfig(b:slime_config)
-  return b:slime_config
+  let config = s:TargetConfig(b:slime_config)
+  if exists("b:slime_validate_config")
+    let valid = g:slime_validate_config(b:slime_config)
+  endif
+  if valid
+    let b:slime_config = s:TargetConfig(b:slime_config)
+    return b:slime_config
+  endif
+
+  return "invalid"
 endfunction
 
 " force re-config
