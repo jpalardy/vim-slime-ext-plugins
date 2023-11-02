@@ -65,19 +65,19 @@ function! slime#config() abort
       return b:slime_config
     endif
 
-    return "invalid"
   endif
+
   let b:slime_config = s:resolve("g:slime_config")
   if b:slime_config is v:null
     let b:slime_config = {}
   endif
   let config = s:TargetConfig(b:slime_config)
   if exists("b:slime_validate_config")
-    let valid = g:slime_validate_config(b:slime_config)
+    let valid = g:slime_validate_config(config)
   endif
   if valid
-    let b:slime_config = s:TargetConfig(b:slime_config)
-    return b:slime_config
+    let b:slime_config = config
+    return config
   endif
 
   return "invalid"
