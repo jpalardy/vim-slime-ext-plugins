@@ -1,4 +1,4 @@
-*slime.txt*   Grab some text and "send" it to a REPL session.
+*vim-slime-ext-plugins.txt*   Grab some text and "send" it to a REPL session.
 
 Author:  Jonathan Palardy                                       *slime-author*
 License: Same terms as Vim itself (see |license|)
@@ -91,6 +91,10 @@ Global Variables~
                           function
 *g:slime_target_config*     |string| used to register the plugin's configuration
                           function
+*g:slime_validate_env*     |string| used to validate the target environment
+                          function
+*g:slime_validate_config*     |string| optionally used to validate the user's 
+                           configuration
 *g:slime_no_mappings*     If set, disable the default mappings.
 
 Buffer Variables~
