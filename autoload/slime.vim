@@ -28,7 +28,7 @@ function! s:TargetConfig(config) abort
   return function(b:slime_target_config)(a:config)
 endfunction
 
-function! s:TargetValidateEnv() abort
+function! s:TargetValiEnv() abort
   let b:slime_valid_config= s:resolve("b:slime_valid_config", "g:slime_valid_config")
   if b:slime_valid_config is v:null
     return 1
