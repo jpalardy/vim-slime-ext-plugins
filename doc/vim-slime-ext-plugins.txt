@@ -205,7 +205,7 @@ through vim functions that you or your plugin must declare.
 Example of using a simple plugin~
 
 In this example, we are going to write a plugin that sends the text it
-receives to a file `foo.txt` in the current directory. We need to define a
+receives to a file "foo.txt" in the current directory. We need to define a
 function for plugin configuration, and another for handling the data. We also
 define the optional functions for validating the environment and validating
 the configuration.
