@@ -98,11 +98,12 @@ Global Variables~
                           function
 *g:slime_target_config*     |string| used to register the plugin's
 configuration function
-*g:slime_valid_env*      |string| optional function used to validate the
-target environment.
+*g:slime_valid_env*      |string|  function used to validate the
+target environment. Check if your extension plugin requires it.
                           
-*g:slime_valid_config*   |string| optional function used to validate the
-user's configuration
+*g:slime_valid_config*   |string| function used to validate the
+user's configuration.  Check if your extension plugin requires it.
+
 *g:slime_no_mappings*     If set, disable the default mappings.
 
 Buffer Variables~
@@ -210,8 +211,9 @@ Example of using a simple plugin~
 In this example, we are going to write a plugin that sends the text it
 receives to a file `foo.txt` in the current directory. We need to define a
 function for plugin configuration, and another for handling the data. We also
-define the optional functions for validating the environment and validating
-the configuration.
+define the functions for validating the environment and validating
+the configuration. These validation plugins could be optional for any given
+target plugin.
 
 Configuration~
 
@@ -235,12 +237,11 @@ convenience function at the registration step.
 
 Validating The Environment~
 
-Optional. Broadly checks if the environment
-has requisite properties that would allow any config to be valid. Should check
-properties of the system and environment, not of the configuration object.
-Checks if there are even any text files at all in the current working
-directory. If there weren't any, no configuration could be valid for this
-plugin.
+Broadly checks if the environment has requisite properties that would allow
+any config to be valid. Should check properties of the system and environment,
+not of the configuration object. Checks if there are even any text files at
+all in the current working directory. If there weren't any, no configuration
+could be valid for this plugin.
 
 >vim
 	function! SlimeFooPluginValidateEnv()
@@ -257,7 +258,7 @@ plugin.
 
 Validating The Configuration~
 
-Optional. Verifies that the configuration is valid.
+Verifies that the configuration is valid.
 
 >vim
 	function! SlimeFooPluginValidateConfig(config)

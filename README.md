@@ -36,7 +36,7 @@ done through vim functions that you or your plugin must declare.
 
 ### Example of using a simple plugin
 
-In this example, we are going to write a plugin that sends the text it receives to a file `foo.txt` in the current directory. We need to define a function for plugin configuration, and another for handling the data. We also define the optional functions for validating the environment and validating the configuration.
+In this example, we are going to write a plugin that sends the text it receives to a file `foo.txt` in the current directory. We need to define a function for plugin configuration, and another for handling the data. We also define two functions for validating the environment and validating the configuration. Check your extension plugin to see if these functions exist and if they are optional.
 
 ### Configuration
 
@@ -56,7 +56,7 @@ In case your plugin does not need configuration, you can use the `slime#noop` co
 
 #### Validating The Environment
 
-Optional. Broadly checks if the environment has requisite properties that would allow any config to be valid. Should check properties of the system and environment, not of the configuration object.
+ Broadly checks if the environment has requisite properties that would allow any config to be valid. Should check properties of the system and environment, not of the configuration object.
 Checks if there are even any text files at all in the current working directory. If there weren't any, no configuration could be valid for this plugin.
 
 ```vim
@@ -74,7 +74,7 @@ endfunction
 
 #### Validating The Configuration
 
-Optional. Verifies that the configuration is valid.
+Verifies that the configuration is valid.
 
 ```vim
 function! SlimeFooPluginValidateConfig(config)
