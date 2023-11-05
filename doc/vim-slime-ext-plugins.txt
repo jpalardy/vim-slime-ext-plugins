@@ -44,7 +44,7 @@ send text to a particular target.
 <c-c>v              Setup slime. You will be prompted for information
 :SlimeConfig        regarding plugin configuration if needed.
 
-                                                                  *:SlimeSend*
+                                                                  `:SlimeSend`
 :<range>SlimeSend   Send a [range] of lines to REPL. If no range is provided
                     the current line is sent.
 
