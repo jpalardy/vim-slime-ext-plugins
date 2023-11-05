@@ -40,7 +40,7 @@ send text to a particular target.
 {Visual}<c-c><c-c>  Send highlighted text to REPL.
 
                                                            *CTRL-C_v* *<c-c>v*
-                                                                *:SlimeConfig*
+                                                                `:SlimeConfig`
 <c-c>v              Setup slime. You will be prompted for information
 :SlimeConfig        regarding plugin configuration if needed.
 
@@ -59,15 +59,18 @@ plugins are available, see |slime-plugins|.
 A plugin should expose at least one target function that will be used by
 vim-slime to send data to the REPL. The signature must be :
 
-`MyTargetFunction(config, text)`
+>vim
+	MyTargetFunction(config, text)
+<vim
 
 With `config` being the configuration variable and `text` the text which is to
 be sent. Vim-slime takes care to initialize the configuration by calling the
 defined configuration function. Such a function must have the following
 signature :
 
-`MyConfigFunction(config)`
-
+>vim
+	MyConfigFunction(config)
+<
 And return the modified configuration.
 
 Both target and configuration functions must be declared to vim-slime using
@@ -153,7 +156,7 @@ which calls |<Plug>SlimeMotionSend| on the current "inner paragraph" (see |ip|).
 By default |<Plug>SlimeMotionSend| is not mapped. Users can create their own
 mapping in their configuration file, e.g. :
 
-`noremap cs <Plug>SlimeMotionSend`
+`noremap gz <Plug>SlimeMotionSend`
 
 With the above mapping it becomes possible for users to finely tune what they
 send. Thus, in the following configuration >
@@ -161,7 +164,7 @@ send. Thus, in the following configuration >
   This is "some fairly nice" text
                 ⮤ Cursor is here
 >
-Pressing `csi"` will send `some fairly nice` to the REPL.
+Pressing `gzi"` will send `some fairly nice` to the REPL.
 
 ==============================================================================
 5. Slime functions                                           *slime-functions*
@@ -205,7 +208,7 @@ through vim functions that you or your plugin must declare.
 Example of using a simple plugin~
 
 In this example, we are going to write a plugin that sends the text it
-receives to a file "foo.txt" in the current directory. We need to define a
+receives to a file `foo.txt` in the current directory. We need to define a
 function for plugin configuration, and another for handling the data. We also
 define the optional functions for validating the environment and validating
 the configuration.
