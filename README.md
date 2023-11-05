@@ -8,7 +8,7 @@ This fork uses plugins to send data to its targets.
 
 ## Vim-slime documentation and usage
 
-The complete [documentation](doc/vim-slime.txt) is available with `:help vim-slime`.
+The complete [documentation](doc/vim-slime.txt) is available with `:help vim-slime-ext-plugins.txt`.
 
 ## Upgrading from vim-slime
 
@@ -36,13 +36,13 @@ done through vim functions that you or your plugin must declare.
 
 ### Example of using a simple plugin
 
-In this example, we are going to write a plugin that sends the text it receives to a file `foo.txt`. We need to define a function for plugin configuration, and another for handling the data.
+In this example, we are going to write a plugin that sends the text it receives to a file `foo.txt` in the current directory. We need to define a function for plugin configuration, and another for handling the data. We also define the optional functions for validating the environment and validating the configuration.
 
 ### Configuration
 
 The configuration function takes the current configuration in parameter and must return the updated configuration. For our example, one could write the following :
 
-```vimscript
+```vim
 function! SlimeFooPluginConfig(config)
   if !exists("a:config['foo']")
     let a:config["foo"] = {"file": "foo.txt"}
@@ -54,11 +54,44 @@ endfunction
 
 In case your plugin does not need configuration, you can use the `slime#noop` convenience function at the registration step.
 
+#### Validating The Environment
+
+Optional. Broadly checks if the environment has requisite properties that would allow any config to be valid. Should check properties of the system and environment, not of the configuration object.
+Checks if there are even any text files at all in the current working directory. If there weren't any, no configuration could be valid for this plugin.
+
+```vim
+function! SlimeFooPluginValidateEnv()
+    let textFiles = glob('./*.txt')
+    if textFiles == ''
+        echo "No text files in current directory."
+        return 0
+    else
+        return 1
+    endif
+endfunction
+```
+
+
+#### Validating The Configuration
+
+Optional. Verifies that the configuration is valid.
+
+```vim
+function! SlimeFooPluginValidateConfig(config)
+    if filereadable(a:config["foo"]["file"])
+        return 1
+    else
+        echom "Config invalid. Use :SlimeConfig to Reconfigure.
+        return 0
+    endif
+endfunction
+```
+
 ### Sending the data
 
 This is the function that will actually do the work. Its paramters are the configuration and the text to send. 
 
-```vimscript
+```vim
 function! SlimeFooPluginSend(config, text)
   let l:file = a:config["foo"]["file"]
   return system("cat >> " . shellescape(file), a:text) 
@@ -69,9 +102,11 @@ endfunction
 
 Vim-slime looks for the configuration function and the target function in two variables : `slime_target_send` and `slime_target_config`. Note that these variables can be defined globally or on a per-buffer level. The variable at buffer level takes precedence. In your configuration file, you can simply add :
 
-```vimscript
+```vim
 let g:slime_target_send="SlimeFooPluginSend"
 let g:slime_target_config="SlimeFooPluginConfig"
+let g:slime_validate_env="SlimeFooPluginValidateEnv"
+let g:slime_validate_config="SlimeFooPluginValidateConfig"
 ```
 
 Remember that you can use `slime#noop` here if your plugin does not need any configuration.

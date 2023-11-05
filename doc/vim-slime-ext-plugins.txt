@@ -18,11 +18,15 @@ The reason you're doing this? Because you want the benefits of a REPL and the
 benefits of using Vim (familiar environment, syntax highlighting, persistence
 ...).
 
+This plugin defines a base off of which other authors can write plugins to
+send text to a particular target. 
+
 1. Slime Usage...................................................|slime-usage|
 2. Plugin Configuration...........................|slime-plugin-configuration|
 3. Available Plugins...........................................|slime-plugins|
 4. Slime Configuration...................................|slime-configuration|
 5. Slime functions...........................................|slime-functions|
+6. Target Plugin Example................................|slime-target-example|
 
 ==============================================================================
 1. Slime Usage                                                   *slime-usage*
@@ -67,7 +71,7 @@ signature :
 And return the modified configuration.
 
 Both target and configuration functions must be declared to vim-slime using
-|b:slime_target_send| or |g:slime_target_send| and |b:slime_target_config| and
+|b:slime_target_send| or |g:slime_target_send| and |b:slime_target_config| or
 |g:slime_target_config| respectively. The buffer variable takes precedence
 over the global variable, so you can use different plugins for different
 buffers. 
@@ -89,21 +93,27 @@ Global Variables~
 
 *g:slime_target_send*       |string| used to register the plugin's target 
                           function
-*g:slime_target_config*     |string| used to register the plugin's configuration
-                          function
-*g:slime_validate_env*     |string| used to validate the target environment
-                          function
-*g:slime_validate_config*     |string| optionally used to validate the user's 
-                           configuration
+*g:slime_target_config*     |string| used to register the plugin's
+configuration function
+*g:slime_valid_env*      |string| optional function used to validate the
+target environment.
+                          
+*g:slime_valid_config*   |string| optional function used to validate the
+user's configuration
 *g:slime_no_mappings*     If set, disable the default mappings.
 
 Buffer Variables~
 
-*b:slime_target_send*       Same as |g:slime_target_send|, but takes precedence
-                          over it.
-*b:slime_target_config*     Same as |g:slime_target_config| but takes
-                          precedence over it.
+*b:slime_target_send*       Same as |g:slime_target_send|, but takes
+precedence over it. *b:slime_target_config*     Same as
+|g:slime_target_config| but takes precedence over it. 
 
+*b:slime_valid_env* |string| same ast |g:slime_valid_env| but take precedence
+over it
+
+*b:slime_valid_config*   |string| same ast |g:slime_valid_config| but take
+precedence over i
+                           configuration
 Mappings~
 
 Note: The default mappings can be disabled using |g:slime_no_mappings|.
@@ -185,5 +195,105 @@ slime#send_op({type}, ...)                                   *slime#send_op()*
 
 slime#send_range({startline}, {endline})                  *slime#send_range()*
           Send the lines from {startline} to {endline}.
+
+==============================================================================
+6. Target Plugin Example                                *slime-target-example*
+
+Vim-slime needs a way to configure, and a way to send text. This is done
+through vim functions that you or your plugin must declare.
+
+Example of using a simple plugin~
+
+In this example, we are going to write a plugin that sends the text it
+receives to a file `foo.txt` in the current directory. We need to define a
+function for plugin configuration, and another for handling the data. We also
+define the optional functions for validating the environment and validating
+the configuration.
+
+Configuration~
+
+The configuration function takes the current configuration in parameter and
+must return the updated configuration. For our example, one could write the
+following :
+
+>vim
+	function! SlimeFooPluginValidateConfig(config)
+	    if filereadable(a:config["foo"]["file"])
+	        return 1
+	    else
+	        echom "Config invalid. Use :SlimeConfig to Reconfigure.
+	        return 0
+	    endif
+	endfunction
+<
+
+In case your plugin does not need configuration, you can use the `slime#noop`
+convenience function at the registration step.
+
+Validating The Environment~
+
+Optional. Broadly checks if the environment
+has requisite properties that would allow any config to be valid. Should check
+properties of the system and environment, not of the configuration object.
+Checks if there are even any text files at all in the current working
+directory. If there weren't any, no configuration could be valid for this
+plugin.
+
+>vim
+	function! SlimeFooPluginValidateEnv()
+	    let textFiles = glob('./*.txt')
+	    if textFiles == ''
+	        echo "No text files in current directory."
+	        return 0
+	    else
+	        return 1
+	    endif
+	endfunction
+>
+
+
+Validating The Configuration~
+
+Optional. Verifies that the configuration is valid.
+
+>vim
+	function! SlimeFooPluginValidateConfig(config)
+	    if filereadable(a:config["foo"]["file"])
+	        return 1
+	    else
+	        echom "Config invalid. Use :SlimeConfig to Reconfigure.
+	        return 0
+	    endif
+	endfunction
+<
+
+Sending the data~
+
+This is the function that will actually do the work. Its paramters are the
+configuration and the text to send. 
+
+>vim
+	function! SlimeFooPluginSend(config, text)
+	  let l:file = a:config["foo"]["file"]
+	  return system("cat >> " . shellescape(file), a:text) 
+	endfunction
+<
+
+Registering the plugin~
+
+Vim-slime looks for the configuration function and the target function in two
+variables : |b:slime_target_send| or |g:slime_target_send| |and
+|b:slime_target_config| or |g:slime_target_config|. The variable at buffer
+level takes precedence. In your configuration file, you can simply add
+
+>vim
+	let g:slime_target_send="SlimeFooPluginSend"
+	let g:slime_target_config="SlimeFooPluginConfig"
+	let g:slime_validate_env="SlimeFooPluginValidateEnv"
+	let g:slime_validate_config="SlimeFooPluginValidateConfig"
+<
+
+Remember that you can use "slime#noop" here if your plugin does not need any
+configuration.
 
 vim:tw=78:ts=8:ft=help:norl:

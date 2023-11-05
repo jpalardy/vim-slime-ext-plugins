@@ -28,6 +28,22 @@ function! s:TargetConfig(config) abort
   return function(b:slime_target_config)(a:config)
 endfunction
 
+function! s:TargetValidateEnv() abort
+  let b:slime_valid_config= s:resolve("b:slime_valid_config", "g:slime_valid_config")
+  if b:slime_valid_config is v:null
+    return 1
+  endif
+  return function(b:slime_target_config)(a:config)
+endfunction
+
+
+function! s:TargetValidConfig(config) abort
+  let b:slime_valid_env = s:resolve("b:slime_valid_env", "g:slime_valid_env")
+  if b:slime_valid_env is v:null
+    return 1
+  endif
+  return function(b:slime_target_config)(a:config)
+endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Helpers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -49,8 +65,8 @@ endfunction
 
 function! slime#send(text)
   let valid_env = 1
-  if exists("*g:slime_validate_env")
-    let valid_env = g:slime_validate_env()
+  if exists("*g:slime_valid_env")
+    let valid_env = g:slime_valid_env()
   endif
 
   if valid_env
@@ -63,33 +79,24 @@ function! slime#send(text)
 endfunction
 
 function! slime#config() abort
-  let valid = 1
   if exists("b:slime_config")
-    if exists("*g:slime_validate_config")")
-      let valid =  g:slime_validate_config(b:slime_config)
-    endif
-
-    if valid
+    if s:TargetValidConfig(b:slime_config)
       return b:slime_config
     endif
-
   endif
 
   let b:slime_config = s:resolve("g:slime_config")
 
   if b:slime_config is v:null "implies that g:slime_config doesn't exist
     let b:slime_config = {}
-  elseif exists("*g:slime_validate_config")") && !g:slime_validate_config("g:slime_config")
+  elseif !s:TargetValidConfig(b:slime_config)
     let b:slime_config = {}
     unlet("g:slime_config")
   endif
   " at the end of the preceding try block, b:slime_config is either {} or a valid config
 
   let config = s:TargetConfig(b:slime_config)
-  if exists("*g:slime_validate_config")")
-    let valid = g:slime_validate_config(config)
-  endif
-  if valid
+  if s:TargetValidConfig(config)
     let b:slime_config = config
     return config
   endif
@@ -99,12 +106,8 @@ endfunction
 
 " force re-config
 function! slime#reconfig() abort
-  let valid_env = 1
-  if exists("*g:slime_validate_env")
-    let valid_env = g:slime_validate_env()
-  endif
 
-  if valid_env
+  if s:TargetValidEnv()
     if exists("b:slime_config")
       unlet b:slime_config
     endif

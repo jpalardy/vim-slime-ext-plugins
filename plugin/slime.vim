@@ -18,7 +18,7 @@ noremap <SID>Operator :<c-u>call slime#store_curpos()<cr>:set opfunc=slime#send_
 noremap <unique> <script> <silent> <Plug>SlimeRegionSend :<c-u>call slime#send_op(visualmode(), 1)<cr>
 noremap <unique> <script> <silent> <Plug>SlimeLineSend :<c-u>call slime#send_range(line('.'), line('.') + v:count1 - 1)<cr>
 noremap <unique> <script> <silent> <Plug>SlimeMotionSend <SID>Operator
-noremap <unique> <script> <silent> <Plug>SlimeParagraphSend <SID>Operatorip
+noremap <unique> <script> <silent> <Plug>Sli meParagraphSend <SID>Operatorip
 noremap <unique> <script> <silent> <Plug>SlimeConfig :<c-u>SlimeConfig<cr>
 
 if !exists("g:slime_no_mappings") || !g:slime_no_mappings
