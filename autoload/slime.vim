@@ -91,7 +91,7 @@ function! slime#config() abort
     let b:slime_config = {}
   elseif !s:TargetValidConfig(b:slime_config)
     let b:slime_config = {}
-    unlet("g:slime_config")
+    unlet "g:slime_config"
   endif
   " at the end of the preceding try block, b:slime_config is either {} or a valid config
 
