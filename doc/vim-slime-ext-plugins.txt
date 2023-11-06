@@ -1,12 +1,12 @@
 *vim-slime-ext-plugins.txt*   Grab some text and "send" it to a REPL session.
 
-Author:  Jonathan Palardy                                       *slime-author*
+Author:  Jonathan Palardy                     *slime-author*
 License: Same terms as Vim itself (see |license|)
 
 This plugin is only available if 'compatible' is not set.
 
 ==============================================================================
-                                                                       *slime*
+                                     *slime*
 Grab some text and "send" it to a REPL session.
 
    VIM --> vim-slime-ext-plugins +  plugin for specific  target  --> REPL~
@@ -31,29 +31,29 @@ send text to a particular target.
 6. Target Plugin Example................................|slime-target-example|
 
 ==============================================================================
-1. Slime Usage                                                   *slime-usage*
+1. Slime Usage                           *slime-usage*
 
-                                                  *CTRL-C_CTRL-C* *<c-c><c-c>*
-<c-c><c-c>          Send the current paragraph text to REPL. Slime will prompt
-                    for configuration if slime is not configured for the
-                    current buffer.
+                          *CTRL-C_CTRL-C* *<c-c><c-c>*
+<c-c><c-c>      Send the current paragraph text to REPL. Slime will prompt
+          for configuration if slime is not configured for the
+          current buffer.
 
-                                              *v_CTRL-C_CTRL-C* *v_<c-c><c-c>*
+                        *v_CTRL-C_CTRL-C* *v_<c-c><c-c>*
 {Visual}<c-c><c-c>  Send highlighted text to REPL.
 
-                                                           *CTRL-C_v* *<c-c>v*
-                                                                `:SlimeConfig`
-<c-c>v              Setup slime. You will be prompted for information
-:SlimeConfig        regarding plugin configuration if needed.
+                               *CTRL-C_v* *<c-c>v*
+                                `:SlimeConfig`
+<c-c>v        Setup slime. You will be prompted for information
+:SlimeConfig    regarding plugin configuration if needed.
 
-                                                                  `:SlimeSend`
+                                  `:SlimeSend`
 :<range>SlimeSend   Send a [range] of lines to REPL. If no range is provided
-                    the current line is sent.
+          the current line is sent.
 
 See |slime-configuration| for advanced commands and mappings.
 
 ==============================================================================
-2. Plugin Configuration                           *slime-plugin-configuration*
+2. Plugin Configuration               *slime-plugin-configuration*
 
 Vim-slime needs a plugin to actually send your code to the REPL. Several
 plugins are available, see |slime-plugins|. 
@@ -62,7 +62,7 @@ A plugin should expose at least one target function that will be used by
 vim-slime to send data to the REPL. The signature must be :
 
 >vim
-	MyTargetFunction(config, text)
+  MyTargetFunction(config, text)
 <vim
 
 With `config` being the configuration variable and `text` the text which is to
@@ -71,7 +71,7 @@ defined configuration function. Such a function must have the following
 signature :
 
 >vim
-	MyConfigFunction(config)
+  MyConfigFunction(config)
 <
 And return the modified configuration.
 
@@ -82,36 +82,36 @@ over the global variable, so you can use different plugins for different
 buffers. 
 
 Note: If your plugin does not need any configuration, you can register
-`slime#noop` instead of your configuration function.
+`slime_plugs#noop` instead of your configuration function.
 
 
 ==============================================================================
-3. Available Plugins                                           *slime-plugins*
+3. Available Plugins                       *slime-plugins*
 
 You can find a list of available target plugins at
 https://github.com/jpalardy/vim-slime-ext-plugins 
 
 ==============================================================================
-4. Slime Configuration                                   *slime-configuration*
+4. Slime Configuration                   *slime-configuration*
 
 Global Variables~
 
-*g:slime_target_send*       |string| used to register the plugin's target 
-                          function
-*g:slime_target_config*     |string| used to register the plugin's
+*g:slime_target_send*     |string| used to register the plugin's target 
+              function
+*g:slime_target_config*   |string| used to register the plugin's
 configuration function
-*g:slime_valid_env*      |string|  function used to validate the
+*g:slime_valid_env*    |string|  function used to validate the
 target environment. Check if your extension plugin requires it.
-                          
+              
 *g:slime_valid_config*   |string| function used to validate the
 user's configuration.  Check if your extension plugin requires it.
 
-*g:slime_no_mappings*     If set, disable the default mappings.
+*g:slime_no_mappings*   If set, disable the default mappings.
 
 Buffer Variables~
 
-*b:slime_target_send*       Same as |g:slime_target_send|, but takes
-precedence over it. *b:slime_target_config*     Same as
+*b:slime_target_send*     Same as |g:slime_target_send|, but takes
+precedence over it. *b:slime_target_config*   Same as
 |g:slime_target_config| but takes precedence over it. 
 
 *b:slime_valid_env* |string| same ast |g:slime_valid_env| but take precedence
@@ -119,35 +119,35 @@ over it
 
 *b:slime_valid_config*   |string| same ast |g:slime_valid_config| but take
 precedence over i
-                           configuration
+               configuration
 Mappings~
 
 Note: The default mappings can be disabled using |g:slime_no_mappings|.
 
-*<Plug>SlimeRegionSend*       Send text in visual or select mode. Default
-                            mapping is <c-c><c-c> in normal and select mode.
-*<Plug>SlimeParagraphSend*    Send the current paragraph. Default mapping is
-                            <c-c><c-c> in normal mode.
-*<Plug>SlimeConfig*           Trigger plugin configuration. Default mapping is
-                            <c-c>v in normal mode.
-*<Plug>SlimeMotionSend*       The slime operator allows user to send the
-                            current selection. Seel |slime-operator-example|.
-*<Plug>SlimeLineSend*         Send the current line to REPL.
+*<Plug>SlimeRegionSend*     Send text in visual or select mode. Default
+              mapping is <c-c><c-c> in normal and select mode.
+*<Plug>SlimeParagraphSend*  Send the current paragraph. Default mapping is
+              <c-c><c-c> in normal mode.
+*<Plug>SlimeConfig*       Trigger plugin configuration. Default mapping is
+              <c-c>v in normal mode.
+*<Plug>SlimeMotionSend*     The slime operator allows user to send the
+              current selection. Seel |slime-operator-example|.
+*<Plug>SlimeLineSend*     Send the current line to REPL.
 
 Commands~
 
-*:SlimeConfig*                Trigger plugin configuration.
-*:SlimeSend*                  Send the lines given in parameters.
-                            `:3,7SlimeSend` will send lines 3 to 7 to REPL.
-                            You can also use |marks|.
-*:SlimeSend1*                 Send the given parameter string to REPL.
-                            `:SlimeSend1 print("Hello World")` will send 
-                            `print("Hello World")` followed by a newline
-                            character ("\r") to REPL.
-*:SlimeSend0*                 Same as |:SlimeSend1|, without newline character.
-*:SlimeSendCurrentLine*       Send current line to REPL.
+*:SlimeConfig*        Trigger plugin configuration.
+*:SlimeSend*          Send the lines given in parameters.
+              `:3,7SlimeSend` will send lines 3 to 7 to REPL.
+              You can also use |marks|.
+*:SlimeSend1*         Send the given parameter string to REPL.
+              `:SlimeSend1 print("Hello World")` will send 
+              `print("Hello World")` followed by a newline
+              character ("\r") to REPL.
+*:SlimeSend0*         Same as |:SlimeSend1|, without newline character.
+*:SlimeSendCurrentLine*     Send current line to REPL.
 
-                                                      *slime-operator-example*
+                            *slime-operator-example*
 SlimeMotionSend example~
 
 Vim-slime defines its own |operator| that allows you to use all kind of
@@ -165,45 +165,45 @@ With the above mapping it becomes possible for users to finely tune what they
 send. Thus, in the following configuration >
 
   This is "some fairly nice" text
-                ⮤ Cursor is here
+        ⮤ Cursor is here
 >
 Pressing `gzi"` will send `some fairly nice` to the REPL.
 
 ==============================================================================
-5. Slime functions                                           *slime-functions*
+5. Slime functions                       *slime-functions*
 
 Vim-slime defines a public interface that you can use.
 
-slime#send({text})                                              *slime#send()*
-          Send the given {text} to the target.
+slime_plugs#send({text})                  *slime_plugs#send()*
+      Send the given {text} to the target.
 
-slime#config()                                                *slime#config()*
-          Trigger vim-slime configuration and return the configuration. If 
-          vim-slime is already configured for the current buffer, return the
-          current configuration.
+slime_plugs#config()                  *slime_plugs#config()*
+      Trigger vim-slime configuration and return the configuration. If 
+      vim-slime is already configured for the current buffer, return the
+      current configuration.
 
-slime#reconfig()                                            *slime#reconfig()*
-          Force vim-slime reconfiguration. Erase current buffer configuration
-          and call |slime#config()|.
+slime_plugs#reconfig()                *slime_plugs#reconfig()*
+      Force vim-slime reconfiguration. Erase current buffer configuration
+      and call |slime_plugs#config()|.
 
-slime#noop(...)                                                 *slime#noop()*
-          Do nothing. Useful to feed to |g:slime_target_config| when a plugin
-          does not need any configuration.
+slime_plugs#noop(...)                   *slime_plugs#noop()*
+      Do nothing. Useful to feed to |g:slime_target_config| when a plugin
+      does not need any configuration.
 
-slime#send_op({type}, ...)                                   *slime#send_op()*
-          The operator function used by |<Plug>SlimeMotionSend|. It is intended
-          to be used either manually or through |g@|. To use it manually, you
-          should set |a:0| to something (the actual value does not matter).
-          When used manually, |slime#send_op()| selects what is between the 
-          |`<| and |`>| tags (last selected Visual area in current buffer)
-          with the given {type} mode. You could for example use the last
-          visual mode, given by |visualmode()|.
+slime_plugs#send_op({type}, ...)             *slime_plugs#send_op()*
+      The operator function used by |<Plug>SlimeMotionSend|. It is
+      intended to be used either manually or through |g@|. To use it
+      manually, you should set |a:0| to something (the actual value does
+      not matter). When used manually, |slime_plugs#send_op()| selects
+      what is between the |`<| and |`>| tags (last selected Visual area in
+      current buffer) with the given {type} mode. You could for example
+      use the last visual mode, given by |visualmode()|.
 
-slime#send_range({startline}, {endline})                  *slime#send_range()*
-          Send the lines from {startline} to {endline}.
+slime_plugs#send_range({startline}, {endline})    *slime_plugs#send_range()*
+      Send the lines from {startline} to {endline}.
 
 ==============================================================================
-6. Target Plugin Example                                *slime-target-example*
+6. Target Plugin Example                *slime-target-example*
 
 Vim-slime needs a way to configure, and a way to send text. This is done
 through vim functions that you or your plugin must declare.
@@ -223,57 +223,63 @@ The configuration function takes the current configuration in parameter and
 must return the updated configuration. For our example, one could write the
 following :
 
-The configuration function takes the current configuration in parameter and must return the updated configuration. For our example, one could write the following :
+The configuration function takes the current configuration in parameter and
+must return the updated configuration. For our example, one could write the
+following :
 
 >vim
-	function! SlimeFooPluginConfig(config)
-	  if !exists("a:config['foo']")
-	    let a:config["foo"] = {"file": "foo.txt"}
-	  end
-	  let a:config["foo"]["file"] = input("Target file: ", a:config["foo"]["file"])
-	  return a:config
-	endfunction
+  function! SlimeFooPluginConfig(config)
+    if !exists("a:config['foo']")
+    let a:config["foo"] = {"file": "foo.txt"}
+    end
+    let a:config["foo"]["file"] = 
+	\ input("Target file: ", a:config["foo"]["file"])
+    return a:config
+  endfunction
 <
 
-In case your plugin does not need configuration, you can use the `slime#noop` convenience function at the registration step.
+In case your plugin does not need configuration, you can use the
+`slime_plugs#noop` convenience function at the registration step.
 
-In case your plugin does not need configuration, you can use the `slime#noop`
-convenience function at the registration step.
+In case your plugin does not need configuration, you can use the
+`slime_plugs#noop` convenience function at the registration step.
 
 Validating The Environment~
 
- Broadly checks if the environment has requisite properties that would allow
- any config to be valid. Should check properties of the system and environment,
- not of the configuration object. Checks if there are even any text files at
- all in the current working directory. If there weren't any, no configuration
- could be valid for this plugin.
+Broadly checks if the environment has requisite properties that would allow
+any config to be valid. Should check properties of the system and
+environment, not of the configuration object. Checks if there are even any
+text files at all in the current working directory. If there weren't any, no
+configuration could be valid for this plugin.
 
 >vim
-	function! SlimeFooPluginValidateEnv()
-	    let textFiles = glob('./*.txt')
-	    if textFiles == ''
-	        echo "No text files in current directory."
-	        return 0
-	    else
-	        return 1
-	    endif
-	endfunction
+  function! SlimeFooPluginValidateEnv()
+    let textFiles = glob('./*.txt')
+    if textFiles == ''
+      echo "No text files in current directory."
+      return 0
+    else
+      return 1
+    endif
+  endfunction
 <
 
 
 Validating The Configuration~
 
-Verifies that the configuration is valid. In this case checks if the supplied file exists.
+Verifies that the configuration is valid. In this case checks if the supplied
+file exists.
 
 >vim
-	function! SlimeFooPluginValidateConfig(config)
-	    if filereadable(a:config["foo"]["file"])
-	        return 1
-	    else
-	        echom " "File does not exist. Config invalid. Use :SlimeConfig to Reconfigure.""
-	        return 0
-	    endif
-	endfunction
+ function! SlimeFooPluginValidateConfig(config)
+   if filereadable(a:config["foo"]["file"])
+     return 1
+   else
+     echom 
+	 \ "File does not exist. Config invalid. Use :SlimeConfig to Reconfigure."
+     return 0
+   endif
+ endfunction
 <
 
 Sending the data~
@@ -282,10 +288,10 @@ This is the function that will actually do the work. Its paramters are the
 configuration and the text to send. 
 
 >vim
-	function! SlimeFooPluginSend(config, text)
-	  let l:file = a:config["foo"]["file"]
-	  return system("cat >> " . shellescape(file), a:text) 
-	endfunction
+  function! SlimeFooPluginSend(config, text)
+    let l:file = a:config["foo"]["file"]
+    return system("cat >> " . shellescape(file), a:text) 
+  endfunction
 <
 
 Registering the plugin~
@@ -296,10 +302,10 @@ variables : |b:slime_target_send| or |g:slime_target_send| |and
 level takes precedence. In your configuration file, you can simply add
 
 >vim
-	let g:slime_target_send="SlimeFooPluginSend"
-	let g:slime_target_config="SlimeFooPluginConfig"
-	let g:slime_valid_env="SlimeFooPluginValidateEnv"
-	let g:slime_valid_config="SlimeFooPluginValidateConfig"
+  let g:slime_target_send="SlimeFooPluginSend"
+  let g:slime_target_config="SlimeFooPluginConfig"
+  let g:slime_valid_env="SlimeFooPluginValidateEnv"
+  let g:slime_valid_config="SlimeFooPluginValidateConfig"
 <
 
 

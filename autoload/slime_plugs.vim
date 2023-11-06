@@ -48,7 +48,7 @@ endfunction
 " Helpers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function! slime#store_curpos()
+function! slime_plugs#store_curpos()
   let s:cur = winsaveview()
 endfunction
 
@@ -63,16 +63,16 @@ endfunction
 " Public interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-function! slime#send(text)
+function! slime_plugs#send(text)
   if s:TargetValidEnv()
-    let config = slime#config()
+    let config = slime_plugs#config()
     if !(type(config) == v:t_string && config == "invalid")
       call s:TargetSend(config, a:text)
     endif
   endif
 endfunction
 
-function! slime#config() abort
+function! slime_plugs#config() abort
 
   if exists("b:slime_config")
     if s:TargetValidConfig(b:slime_config)
@@ -100,13 +100,13 @@ function! slime#config() abort
 endfunction
 
 " force re-config
-function! slime#reconfig() abort
+function! slime_plugs#reconfig() abort
 
   if s:TargetValidEnv()
     if exists("b:slime_config")
       unlet b:slime_config
     endif
-    return slime#config()
+    return slime_plugs#config()
   endif
 
   if exists("b:slime_config")
@@ -118,11 +118,11 @@ function! slime#reconfig() abort
 endfunction
 
 " helper function for empty configs
-function! slime#noop(...)
+function! slime_plugs#noop(...)
   return {}
 endfunction
 
-function! slime#send_op(type, ...) abort
+function! slime_plugs#send_op(type, ...) abort
   let sel_save = &selection
   let &selection = "inclusive"
   let rv = getreg('"')
@@ -139,7 +139,7 @@ function! slime#send_op(type, ...) abort
   endif
 
   call setreg('"', @", 'V')
-  call slime#send(@")
+  call slime_plugs#send(@")
 
   let &selection = sel_save
   call setreg('"', rv, rt)
@@ -147,11 +147,11 @@ function! slime#send_op(type, ...) abort
   call s:SlimeRestoreCurPos()
 endfunction
 
-function! slime#send_range(startline, endline) abort
+function! slime_plugs#send_range(startline, endline) abort
   let rv = getreg('"')
   let rt = getregtype('"')
   silent exe a:startline . ',' . a:endline . 'yank'
-  call slime#send(@")
+  call slime_plugs#send(@")
   call setreg('"', rv, rt)
 endfunction
 
