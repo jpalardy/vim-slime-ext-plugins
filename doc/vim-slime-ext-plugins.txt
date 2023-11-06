@@ -18,7 +18,9 @@ The reason you're doing this? Because you want the benefits of a REPL and the
 benefits of using Vim (familiar environment, syntax highlighting, persistence
 ...).
 
-A fork of the original `vim-slime` plugin.
+A fork of the original `vim-slime` plugin. 
+
+NOTE: This plugin will not load if the original plugin is loaded.
 
 This plugin defines a base off of which other authors can write plugins to
 send text to a particular target.

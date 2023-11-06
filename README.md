@@ -6,7 +6,7 @@ easy/hard it would be to keep target/language plugins outside of this codebase.
 
 This fork uses plugins to send data to its targets.
 
-This plugin will not load if the original vim-slime is loaded.
+*Note*: This plugin will not load if the original vim-slime plugin is loaded.
 
 ## Vim-slime documentation and usage
 
@@ -39,7 +39,9 @@ done through vim functions that you or your plugin must declare.
 
 ### Example of using a simple plugin
 
-In this example, we are going to write a plugin that sends the text it receives to an already-existing file `foo.txt`, in the current directory. We need to define a function for plugin configuration, and another for handling the data. We also define two functions for validating the environment and validating the configuration. Check your extension plugin to see if these functions exist and if they are optional.
+In this example, we are going to write a plugin that sends the text it receives to an already-existing file `foo.txt`, in the current directory. We need to define a function for plugin configuration, and another for handling the data. We also define two functions for validating the environment and validating the configuration. Check the extension plugin that you are using to see if these functions exist and whether they are optional or required.
+
+You can install this example plugin using a package manager from [this repo](https://github.com/jam1015/vim-slime-ext-localtextfile/)
 
 ### Configuration
 
