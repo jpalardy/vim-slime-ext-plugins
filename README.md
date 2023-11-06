@@ -21,7 +21,6 @@ You will need a plugin for your specific target. Please see [available target pl
 Please refer to the target plugin documentation and [Registering the plugin](#registering-the-plugin) 
 below for configuration.
 
-This plugin won't load if the original slime plugin is not loaded.
 
 ## Available plugins
 
