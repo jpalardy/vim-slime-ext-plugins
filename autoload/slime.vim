@@ -38,13 +38,10 @@ endfunction
 
 
 function! s:TargetValidConfig(config) abort
-  echom "inside target validate"
   let b:slime_valid_config = s:resolve("b:slime_valid_config", "g:slime_valid_config")
-  echom "found a validation function"
   if b:slime_valid_config is v:null
     return 1
   endif
-  echom "calling validation function"
   return function(b:slime_valid_config)(a:config)
 endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -76,35 +73,25 @@ function! slime#send(text)
 endfunction
 
 function! slime#config() abort
-	echom "checking for local config"
 
   if exists("b:slime_config")
     if s:TargetValidConfig(b:slime_config)
       return b:slime_config
     endif
   endif
-  echom "done checking for local config"
 
-  echom "resolving global slime config"
   let b:slime_config = s:resolve("g:slime_config")
-  echom "done resolving global sline config"
 
-  echom "checking if local config is null"
   if b:slime_config is v:null "implies that g:slime_config doesn't exist
-	  echom "it is in fact null"
     let b:slime_config = {}
   elseif !s:TargetValidConfig(b:slime_config)
-	  echom "it wasn't null but it is not valid"
     let b:slime_config = {}
     unlet "g:slime_config"
   endif
   " at the end of the preceding try block, b:slime_config is either {} or a valid config
-  echom "calling the target config"
 
   let config = s:TargetConfig(b:slime_config)
-  echom "attempting to validate"
   if s:TargetValidConfig(config)
-  echom "done validating"
     let b:slime_config = config
     return config
   endif
