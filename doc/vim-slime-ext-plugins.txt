@@ -240,11 +240,11 @@ convenience function at the registration step.
 
 Validating The Environment~
 
-Broadly checks if the environment has requisite properties that would allow
-any config to be valid. Should check properties of the system and environment,
-not of the configuration object. Checks if there are even any text files at
-all in the current working directory. If there weren't any, no configuration
-could be valid for this plugin.
+ Broadly checks if the environment has requisite properties that would allow
+ any config to be valid. Should check properties of the system and environment,
+ not of the configuration object. Checks if there are even any text files at
+ all in the current working directory. If there weren't any, no configuration
+ could be valid for this plugin.
 
 >vim
 	function! SlimeFooPluginValidateEnv()
@@ -261,14 +261,14 @@ could be valid for this plugin.
 
 Validating The Configuration~
 
-Verifies that the configuration is valid.
+Verifies that the configuration is valid. In this case checks if the supplied file exists.
 
 >vim
 	function! SlimeFooPluginValidateConfig(config)
 	    if filereadable(a:config["foo"]["file"])
 	        return 1
 	    else
-	        echom "Config invalid. Use :SlimeConfig to Reconfigure.k
+	        echom " "File does not exist. Config invalid. Use :SlimeConfig to Reconfigure.""
 	        return 0
 	    endif
 	endfunction

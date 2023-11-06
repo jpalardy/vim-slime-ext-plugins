@@ -36,7 +36,7 @@ done through vim functions that you or your plugin must declare.
 
 ### Example of using a simple plugin
 
-In this example, we are going to write a plugin that sends the text it receives to a file `foo.txt` in the current directory. We need to define a function for plugin configuration, and another for handling the data. We also define two functions for validating the environment and validating the configuration. Check your extension plugin to see if these functions exist and if they are optional.
+In this example, we are going to write a plugin that sends the text it receives to an already-existing file `foo.txt`, in the current directory. We need to define a function for plugin configuration, and another for handling the data. We also define two functions for validating the environment and validating the configuration. Check your extension plugin to see if these functions exist and if they are optional.
 
 ### Configuration
 
@@ -74,14 +74,16 @@ endfunction
 
 #### Validating The Configuration
 
-Verifies that the configuration is valid.
+
+Verifies that the configuration is valid. In this case checks if the supplied file exists.
+
 
 ```vim
 function! SlimeFooPluginValidateConfig(config)
     if filereadable(a:config["foo"]["file"])
         return 1
     else
-        echom "Config invalid. Use :SlimeConfig to Reconfigure."
+        echom "File does not exist. Config invalid. Use :SlimeConfig to Reconfigure."
         return 0
     endif
 endfunction
