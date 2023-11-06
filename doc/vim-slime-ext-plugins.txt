@@ -221,16 +221,19 @@ The configuration function takes the current configuration in parameter and
 must return the updated configuration. For our example, one could write the
 following :
 
+The configuration function takes the current configuration in parameter and must return the updated configuration. For our example, one could write the following :
+
 >vim
-	function! SlimeFooPluginValidateConfig(config)
-	    if filereadable(a:config["foo"]["file"])
-	        return 1
-	    else
-	        echom "Config invalid. Use :SlimeConfig to Reconfigure.
-	        return 0
-	    endif
+	function! SlimeFooPluginConfig(config)
+	  if !exists("a:config['foo']")
+	    let a:config["foo"] = {"file": "foo.txt"}
+	  end
+	  let a:config["foo"]["file"] = input("Target file: ", a:config["foo"]["file"])
+	  return a:config
 	endfunction
 <
+
+In case your plugin does not need configuration, you can use the `slime#noop` convenience function at the registration step.
 
 In case your plugin does not need configuration, you can use the `slime#noop`
 convenience function at the registration step.
@@ -253,7 +256,7 @@ could be valid for this plugin.
 	        return 1
 	    endif
 	endfunction
->
+<
 
 
 Validating The Configuration~
@@ -265,7 +268,7 @@ Verifies that the configuration is valid.
 	    if filereadable(a:config["foo"]["file"])
 	        return 1
 	    else
-	        echom "Config invalid. Use :SlimeConfig to Reconfigure.
+	        echom "Config invalid. Use :SlimeConfig to Reconfigure.k
 	        return 0
 	    endif
 	endfunction
@@ -297,7 +300,5 @@ level takes precedence. In your configuration file, you can simply add
 	let g:slime_validate_config="SlimeFooPluginValidateConfig"
 <
 
-Remember that you can use "slime#noop" here if your plugin does not need any
-configuration.
 
 vim:tw=78:ts=8:ft=help:norl:

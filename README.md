@@ -81,7 +81,7 @@ function! SlimeFooPluginValidateConfig(config)
     if filereadable(a:config["foo"]["file"])
         return 1
     else
-        echom "Config invalid. Use :SlimeConfig to Reconfigure.
+        echom "Config invalid. Use :SlimeConfig to Reconfigure."
         return 0
     endif
 endfunction
