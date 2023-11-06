@@ -296,8 +296,8 @@ level takes precedence. In your configuration file, you can simply add
 >vim
 	let g:slime_target_send="SlimeFooPluginSend"
 	let g:slime_target_config="SlimeFooPluginConfig"
-	let g:slime_validate_env="SlimeFooPluginValidateEnv"
-	let g:slime_validate_config="SlimeFooPluginValidateConfig"
+	let g:slime_valid_env="SlimeFooPluginValidateEnv"
+	let g:slime_valid_config="SlimeFooPluginValidateConfig"
 <
 
 
