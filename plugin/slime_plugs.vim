@@ -3,6 +3,7 @@ if exists('g:loaded_slime') || exists('g:loaded_slime_plugs') || &cp || v:versio
 endif
 
 let g:loaded_slime_plugs = 1
+let g:loaded_slime = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup key bindings

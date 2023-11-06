@@ -7,6 +7,7 @@ easy/hard it would be to keep target/language plugins outside of this codebase.
 This fork uses plugins to send data to its targets.
 
 *Note*: This plugin will not load if the original vim-slime plugin is loaded.
+*Note*: This plugin will prevent the original plugin from loading.
 
 ## Vim-slime documentation and usage
 
