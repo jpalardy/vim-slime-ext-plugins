@@ -8,7 +8,7 @@ This fork uses plugins to send data to its targets.
 
 ## Vim-slime documentation and usage
 
-The complete [documentation](doc/vim-slime.txt) is available with `:help vim-slime-ext-plugins.txt`.
+The complete [documentation](doc/vim-slime-ext-plugins.txt) is available with `:help vim-slime-ext-plugins.txt`.
 
 ## Upgrading from vim-slime
 
@@ -20,6 +20,8 @@ and configuration should still work. For cells feature, please see
 You will need a plugin for your specific target. Please see [available target plugins](#available-plugins). 
 Please refer to the target plugin documentation and [Registering the plugin](#registering-the-plugin) 
 below for configuration.
+
+This plugin won't load if the original slime plugin is not loaded.
 
 ## Available plugins
 
