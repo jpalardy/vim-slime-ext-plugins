@@ -7,7 +7,7 @@ easy/hard it would be to keep target/language plugins outside of this codebase.
 This fork uses plugins to send data to its targets.
 
 *Note*: This plugin will not load if the original vim-slime plugin is loaded.
-*Note*: This plugin will prevent the original plugin from loading.
+*Note*: This plugin will prevent the original vim-slime plugin from loading.
 
 ## Vim-slime documentation and usage
 
@@ -58,7 +58,7 @@ function! SlimeFooPluginConfig(config)
 endfunction
 ```
 
-In case your plugin does not need configuration, you can use the `slime_plugs#noop` convenience function at the registration step.
+In case your plugin does not need configuration, you can use the `slime#noop` convenience function at the registration step.
 
 #### Validating The Environment
 
@@ -117,5 +117,5 @@ let g:slime_validate_env="SlimeFooPluginValidateEnv"
 let g:slime_validate_config="SlimeFooPluginValidateConfig"
 ```
 
-Remember that you can use `slime_plugs#noop` here if your plugin does not need any configuration.
+Remember that you can use `slime#noop` here if your plugin does not need any configuration.
 

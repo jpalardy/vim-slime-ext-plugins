@@ -21,7 +21,7 @@ benefits of using Vim (familiar environment, syntax highlighting, persistence
 A fork of the original `vim-slime` plugin. 
 
 NOTE: This plugin will not load if the original plugin is loaded.
-NOTE: This plugin will prevent the original plugin from loading.
+NOTE: This plugin will prevent the original vim-slime plugin from loading.
 
 This plugin defines a base off of which other authors can write plugins to
 send text to a particular target.
@@ -85,7 +85,7 @@ over the global variable, so you can use different plugins for different
 buffers. 
 
 Note: If your plugin does not need any configuration, you can register
-`slime_plugs#noop` instead of your configuration function.
+`slime#noop` instead of your configuration function.
 
 
 ==============================================================================
@@ -177,32 +177,32 @@ Pressing `gzi"` will send `some fairly nice` to the REPL.
 
 Vim-slime defines a public interface that you can use.
 
-slime_plugs#send({text})                  *slime_plugs#send()*
+slime#send({text})                  *slime#send()*
       Send the given {text} to the target.
 
-slime_plugs#config()                  *slime_plugs#config()*
+slime#config()                  *slime#config()*
       Trigger vim-slime configuration and return the configuration. If 
       vim-slime is already configured for the current buffer, return the
       current configuration.
 
-slime_plugs#reconfig()                *slime_plugs#reconfig()*
+slime#reconfig()                *slime#reconfig()*
       Force vim-slime reconfiguration. Erase current buffer configuration
-      and call |slime_plugs#config()|.
+      and call |slime#config()|.
 
-slime_plugs#noop(...)                   *slime_plugs#noop()*
+slime#noop(...)                   *slime#noop()*
       Do nothing. Useful to feed to |g:slime_target_config| when a plugin
       does not need any configuration.
 
-slime_plugs#send_op({type}, ...)             *slime_plugs#send_op()*
+slime#send_op({type}, ...)             *slime#send_op()*
       The operator function used by |<Plug>SlimeMotionSend|. It is
       intended to be used either manually or through |g@|. To use it
       manually, you should set |a:0| to something (the actual value does
-      not matter). When used manually, |slime_plugs#send_op()| selects
+      not matter). When used manually, |slime#send_op()| selects
       what is between the |`<| and |`>| tags (last selected Visual area in
       current buffer) with the given {type} mode. You could for example
       use the last visual mode, given by |visualmode()|.
 
-slime_plugs#send_range({startline}, {endline})    *slime_plugs#send_range()*
+slime#send_range({startline}, {endline})    *slime#send_range()*
       Send the lines from {startline} to {endline}.
 
 ==============================================================================
@@ -242,10 +242,10 @@ following :
 <
 
 In case your plugin does not need configuration, you can use the
-`slime_plugs#noop` convenience function at the registration step.
+`slime#noop` convenience function at the registration step.
 
 In case your plugin does not need configuration, you can use the
-`slime_plugs#noop` convenience function at the registration step.
+`slime#noop` convenience function at the registration step.
 
 Validating The Environment~
 
