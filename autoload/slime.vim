@@ -64,13 +64,13 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 function! slime#send(text)
-	if s:TargetValidEnv()
-		try
-			let config = slime#config()
-		catch \invalid config\
-		endtry
-			call s:TargetSend(config, a:text)
-	endif
+  if s:TargetValidEnv()
+    try
+      let config = slime#config()
+    catch \invalid config\
+    endtry
+    call s:TargetSend(config, a:text)
+  endif
 endfunction
 
 function! slime#config() abort
